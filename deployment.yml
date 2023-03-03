@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spring
+  template:
+    metadata:
+      labels:
+        app: spring
+    spec:
+      containers:
+       - image: ravis.azurecr.io/newrepo:1
+         name: springboot
+         ports:
+           - containerPort: 8080
+      imagePullSecrets: 
+      - name: secret  
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: spring-svc
+spec:
+  ports:
+    - protocol: "TCP"
+      port: 80
+      targetPort: 8080
+  selector:
+    app: spring
+  type: LoadBalancer
